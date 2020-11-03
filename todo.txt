@@ -1,0 +1,21 @@
+
+- Create Models for users?
+- Django auth
+- Model for a Project (logo, title, phases)
+- Phase needs a model?
+- If user is logged in, create a project?
+
+- Organization, model with users
+- Project, belongs to an Organization
+- Project belongs to certain users.
+
+- Index should be a register or log in form only
+
+- upon login in the user must be part of an Organization
+
+- User sees all projects
+
+- User can create a project and assign it to an Organization
+- User can assign users to project
+
+- User can check project phase

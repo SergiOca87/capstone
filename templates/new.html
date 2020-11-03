@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+   
+
+    <h1>All Projects</h1>
+
+    {% if user.is_authenticated %}
+        <h2>Welcome {{user.name}}</h2>
+
+        <p>Add a new project:</p>
+
+        <form action="{% url 'new_project' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" name="title" placeholder="Project Title">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="email" name="email" placeholder="Notifications Email">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Add Project">
+        </form>
+
+    {% else %}
+        <h2>Please Log in to see this page.</h2>
+        <a href="{% url 'list' %}"></a>
+    {% endif %}
+  
+{% endblock %}
