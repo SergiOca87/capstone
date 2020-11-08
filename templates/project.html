@@ -3,4 +3,27 @@
 {% block body %}
     <h2>{{ project.title }}</h2>
     <a href="{% url 'edit_project' project.id %}" class="btn btn-primary">Edit Project</a>
+    <p>Project Phases:</p>
+    <ul>
+        <li>Phases</li>
+    </ul>
+    <form action="{% url 'project' project.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" placeholder="Phase Name">
+        </div>
+        <div class="form-group">
+            <label for="notifications">Start Date</label>
+            <input type="date" name="start" id="start">
+        </div>
+        <div class="form-group">
+            <label for="notifications">End Date</label>
+            <input type="date" name="start" id="start">
+        </div>
+        <div class="form-group">
+            <label for="notifications">Completed?</label>
+            <input type="checkbox" name="notifications" id="notifications">
+        </div>
+        <input class="btn btn-primary" type="submit" name="add_phae" value="Add Phase">
+    </form>
 {% endblock %}

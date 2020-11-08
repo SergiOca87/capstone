@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
 
-from .models import User, Project
+from .models import User, Project, Phase
 
 def index(request):
     return render(request, "index.html")
@@ -103,14 +103,26 @@ def new_project(request):
 
 def project(request, project_id):
     # is it pk?
-    try:
+    if request.method == "POST":
+        # Adding a phase
+        name  = request.POST["name"]
+        start_date = request.POST["start_date"]
+        end_date = request.POST["end_date"]
+        completed = request.POST["completed"]
+        completed = True if completed == 'on' else False
         project = Project.objects.get(pk=project_id)
-    except Project.DoesNotExist:
-        return JsonResponse({"error": "Project not found."}, status=404)
 
-    return render(request, "project.html", {
-        "project": project
-    })
+        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
+        f.save()
+    else:
+        try:
+            project = Project.objects.get(pk=project_id)
+        except Project.DoesNotExist:
+            return JsonResponse({"error": "Project not found."}, status=404)
+
+        return render(request, "project.html", {
+            "project": project
+        })
 
     
 def edit_project(request, project_id):
