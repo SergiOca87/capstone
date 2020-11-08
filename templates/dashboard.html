@@ -1,15 +1,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+<h2>Welcome {{ user.username }}</h2>
+<p>There are your projects:</p>
    
-
-    <h1>Index Page</h1>
-
-    {% if user.is_authenticated %}
-        <h2>Welcome {user.name}</h2>
-    {% else %}
-        <h2>Please Log in to see this page.</h2>
-        <a href="{% url 'list' %}"></a>
-    {% endif %}
-  
 {% endblock %}

@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h2>{{ project.title }}</h2>
+    <a href="{% url 'edit_project' project.id %}" class="btn btn-primary">Edit Project</a>
+{% endblock %}

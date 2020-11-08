@@ -58,7 +58,9 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return render(request, "dashboard.html", {
+            "project": project
+        })
     else:
         return render(request, "register.html")
 
@@ -68,20 +70,70 @@ def list(request):
         'projects': projects
     })
 
+
+# Find projects where this user is assigned...
+def dashboard(request):
+    current_user = request.user
+    project = Project.objects.get(pk=project_id)
+    
+
 def new_project(request):
+    users = User.objects.all()
+    admin = request.user
+    
     if request.method == "POST":
         title = request.POST["title"]
-        notifications = request.POST["email"]
+        notifications = request.POST["notifications"]
+        notifications = True if notifications == 'on' else False
+        admin = request.user
 
-        print(title, notifications)
-
-        f = Project(title = title, notifications = notifications)
+        f = Project(title = title, notifications = notifications, admin = admin)
         f.save()
-    
-        # return this new project page instead
-        return HttpResponseRedirect(reverse("list"))
-    else:
-        return render(request, "new.html")
 
+        admin.projects.add(f)
+        # return this new project page instead
+        return render(request, "project.html", {
+            "project": f
+        })
+    else:
+        return render(request, "new.html", {
+            "users": users,
+            "admin": admin
+        })
+
+def project(request, project_id):
+    # is it pk?
+    try:
+        project = Project.objects.get(pk=project_id)
+    except Project.DoesNotExist:
+        return JsonResponse({"error": "Project not found."}, status=404)
+
+    return render(request, "project.html", {
+        "project": project
+    })
+
+    
+def edit_project(request, project_id):
+    if request.method == "POST":
+        project = Project.objects.get(pk=project_id)
+
+        # Change logo when it works as well
+
+        title = request.POST["title"]
+        notifications = request.POST["notifications"]
+
+        project.title = request.POST["title"]
+        project.notifications = request.POST["notifications"]
+
+        project.save();
+   
+        return HttpResponseRedirect(reverse('list'))
+    else:
+
+        # Need to create an edit template and pre-populate fields
+        project = Project.objects.get(pk=project_id)
+        return render(request, "dashboard.html", {
+            "project": project
+        })
 
 # Create a project phase form to add phases to a project

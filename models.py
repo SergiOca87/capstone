@@ -3,11 +3,13 @@ from django.db import models
 from django.utils.timezone import now
 
 class User(AbstractUser):
-    pass
+    projects = models.ManyToManyField('Project', blank=True, related_name="projects")
 
 class Project(models.Model):
     title = models.CharField(max_length=280, default=None, null=True, blank=True)
-    notifications = models.EmailField(max_length=254, default=None, null=True, blank=True, help_text='Project manager email.')
+    notifications = models.BooleanField(default=None, null=True, blank=True, help_text='If enabled, users related to this project will get e-mail notifications.')
+    # users = models.ManyToManyField(User, blank=True, related_name="users")
+    admin = models.ForeignKey(User, related_name="admin", default=None, null=True, blank=True, on_delete=models.CASCADE)
 
 class Phase(models.Model):
     name = models.CharField(max_length=280, default=None, null=False, blank=False),

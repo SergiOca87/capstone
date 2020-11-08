@@ -2,11 +2,12 @@
 
 {% block body %}
    
-
-    <h1>Index Page</h1>
-
     {% if user.is_authenticated %}
         <h2>Welcome {{user.username}}</h2>
+
+        <a href="{% url 'list' %}" class="btn">All Projects</a>
+        <a href="{% url 'dashboard' %}" class="btn">Profile Page</a>
+        <a href="{% url 'new_project' %}" class="btn">+ New Project</a>
     {% else %}
 
         <div class="index-forms">

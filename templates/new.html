@@ -16,7 +16,19 @@
                 <input class="form-control" type="text" name="title" placeholder="Project Title">
             </div>
             <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Notifications Email">
+                <label for="notifications">Enable Notifications</label>
+                <input type="checkbox" name="notifications" id="notifications">
+            </div>
+            <div class="form-group">
+                <label for="users">Related Users (users with access to this project).</label>
+                <select name="users" id="users" multiple>
+                        <option value="admin.username" selected>{{ admin.username }}</option>
+
+                        <!-- can I delete the admin from this list? -->
+                        {% for user in users %}
+                            <option value="user.username">{{ user.username }}</option>
+                        {% endfor %}
+                </select>
             </div>
             <input class="btn btn-primary" type="submit" value="Add Project">
         </form>

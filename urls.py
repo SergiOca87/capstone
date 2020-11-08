@@ -24,5 +24,8 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path("list", views.list, name="list"),
+    path("dashboard", views.dashboard, name="dashboard"),
     path("new", views.new_project, name="new_project"),
+    path("project/<int:project_id>", views.project, name="project"),
+    path("edit_project/<int:project_id>", views.edit_project, name="edit_project")
 ]
