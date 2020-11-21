@@ -102,18 +102,24 @@ def new_project(request):
         })
 
 def project(request, project_id):
-    # is it pk?
+    project = Project.objects.get(pk=project_id)
+    phases = Phase.objects.filter(project=project)
     if request.method == "POST":
         # Adding a phase
         name  = request.POST["name"]
-        start_date = request.POST["start_date"]
-        end_date = request.POST["end_date"]
-        completed = request.POST["completed"]
-        completed = True if completed == 'on' else False
+        start_date = request.POST.get("start")
+        end_date = request.POST.get("end")
+        completed = request.POST.get("completed")
+        # completed = True if completed == 'on' else False
         project = Project.objects.get(pk=project_id)
 
         f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
         f.save()
+
+        return render(request, "project.html", {
+            "project": project,
+            "phases": phases
+        })
     else:
         try:
             project = Project.objects.get(pk=project_id)
@@ -121,7 +127,8 @@ def project(request, project_id):
             return JsonResponse({"error": "Project not found."}, status=404)
 
         return render(request, "project.html", {
-            "project": project
+            "project": project,
+            "phases": phases
         })
 
     
@@ -148,4 +155,6 @@ def edit_project(request, project_id):
             "project": project
         })
 
-# Create a project phase form to add phases to a project
+# Make restrictions (edit button, show all projects...Maybe a user level)
+# Able to mark a phase as completed
+# Email notifications? That would be an extra

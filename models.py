@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from datetime import datetime
 from django.utils.timezone import now
 
 class User(AbstractUser):
@@ -12,8 +13,8 @@ class Project(models.Model):
     admin = models.ForeignKey(User, related_name="admin", default=None, null=True, blank=True, on_delete=models.CASCADE)
 
 class Phase(models.Model):
-    name = models.CharField(max_length=280, default=None, null=False, blank=False),
-    start_date = models.DateTimeField(auto_now=False, auto_now_add=False),
-    end_date = models.DateTimeField(auto_now=False, auto_now_add=False),
+    name = models.CharField(max_length=280, default=None, null=True, blank=True)
+    start_date = models.DateField(auto_now=False, auto_now_add=False)
+    end_date = models.DateField(auto_now=False, auto_now_add=False)
     completed = models.BooleanField(default=None, null=True, blank=True)
     project = models.ForeignKey(Project, related_name="project", default=None, null=True, blank=True, on_delete=models.CASCADE)

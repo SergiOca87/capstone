@@ -2,10 +2,27 @@
 
 {% block body %}
     <h2>{{ project.title }}</h2>
+    
+    <!-- Only show if admin -->
     <a href="{% url 'edit_project' project.id %}" class="btn btn-primary">Edit Project</a>
     <p>Project Phases:</p>
-    <ul>
-        <li>Phases</li>
+    <ul></ul>
+        {% for phase in phases %}
+            <li>
+                <p>{{ phase.name }}</p>
+                <p>Start: {{ phase.start_date }}</p>
+                <p>End: {{ phase.end_date }}</p>
+                <p>
+                    {% if phase.completed is False %}
+                    <span>
+                        Not
+                    </span>
+                    {% endif %}
+                    Completed
+                </p>
+            </li>
+
+        {% endfor %}
     </ul>
     <form action="{% url 'project' project.id %}" method="post">
         {% csrf_token %}
@@ -18,12 +35,12 @@
         </div>
         <div class="form-group">
             <label for="notifications">End Date</label>
-            <input type="date" name="start" id="start">
+            <input type="date" name="end" id="start">
         </div>
         <div class="form-group">
             <label for="notifications">Completed?</label>
             <input type="checkbox" name="notifications" id="notifications">
         </div>
-        <input class="btn btn-primary" type="submit" name="add_phae" value="Add Phase">
+        <input class="btn btn-primary" type="submit" name="add_phase" value="Add Phase">
     </form>
 {% endblock %}
