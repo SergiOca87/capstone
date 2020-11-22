@@ -3,10 +3,8 @@
 {% block body %}
    
 
-    <h1>All Projects</h1>
-
     {% if user.is_authenticated %}
-        <h2>Welcome {{user.name}}</h2>
+        <h2 class="mb-5">Welcome {{current_user.username}}</h2>
 
         <p>Add a new project:</p>
 
@@ -15,19 +13,22 @@
             <div class="form-group">
                 <input class="form-control" type="text" name="title" placeholder="Project Title">
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="notifications">Enable Notifications</label>
                 <input type="checkbox" name="notifications" id="notifications">
+            </div> -->
+            <div class="form-group">
+                <label for="project_logo">Project Logo</label>
+                <input type="file" name="project_logo" id="project_logo">
             </div>
             <div class="form-group">
                 <label for="users">Related Users (users with access to this project).</label>
                 <select name="users" id="users" multiple>
-                        <option value="admin.username" selected>{{ admin.username }}</option>
-
-                        <!-- can I delete the admin from this list? -->
-                        {% for user in users %}
-                            <option value="user.username">{{ user.username }}</option>
-                        {% endfor %}
+                    <option value="{{current_user.id}}" selected>{{ current_user.username }}</option>
+                    <!-- can I delete the admin from this list? -->
+                    {% for user in users %}
+                        <option value="{{user.id}}">{{ user.username }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <input class="btn btn-primary" type="submit" value="Add Project">

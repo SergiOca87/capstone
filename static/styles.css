@@ -1,0 +1,20 @@
+main {
+    padding: 2rem 0;
+}
+
+.card {
+    height: 100%;
+    
+}
+
+.project img {
+    max-width: 250px;
+}
+
+/* 
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+} */

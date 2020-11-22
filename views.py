@@ -79,26 +79,39 @@ def dashboard(request):
 
 def new_project(request):
     users = User.objects.all()
-    admin = request.user
+    current_user = request.user
     
     if request.method == "POST":
         title = request.POST["title"]
-        notifications = request.POST["notifications"]
-        notifications = True if notifications == 'on' else False
-        admin = request.user
+        current_user = request.user
+        project_users_id = request.POST.getlist('users')
+        project_users_list = []
+        project_logo = request.POST["project_logo"]
 
-        f = Project(title = title, notifications = notifications, admin = admin)
+        f = Project(title = title, admin = current_user, project_logo = project_logo)
         f.save()
 
-        admin.projects.add(f)
+        current_user.projects.add(f)
+        
+        # Add the project to the selected users projects list
+        for user in project_users_id:
+            project_user = User.objects.get(pk=user)
+            project_user.projects.add(f)
+
+            # Retrieve their names and add them to a list, just to display them on the front
+            project_users_list.append( project_user.username )
+
+        print(project_users_list)
+
         # return this new project page instead
         return render(request, "project.html", {
-            "project": f
+            "project": f,
+            "project_users_list": project_users_list
         })
     else:
         return render(request, "new.html", {
             "users": users,
-            "admin": admin
+            "current_user": current_user
         })
 
 def project(request, project_id):
@@ -119,6 +132,7 @@ def project(request, project_id):
         return render(request, "project.html", {
             "project": project,
             "phases": phases
+            # "project_users_list": project_users_list
         })
     else:
         try:
@@ -158,3 +172,4 @@ def edit_project(request, project_id):
 # Make restrictions (edit button, show all projects...Maybe a user level)
 # Able to mark a phase as completed
 # Email notifications? That would be an extra
+# project.html needs a list of users with access to that project, so let's use "project_users"
