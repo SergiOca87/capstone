@@ -5,9 +5,11 @@
     <head>
         <title>{% block title %}Project Planner{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
         <link href="{% static 'styles.css' %}" rel="stylesheet">
     </head>
-    <body>
+    <body class="bg-light">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Logo</a>
@@ -19,7 +21,7 @@
                     <!-- User Dashboard goes here -->
                    
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'list' %}">All Projects</a>
+                        <a class="nav-link" href="{% url 'project_list' %}">All Projects</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'new_project' %}">+ New Project</a>

@@ -7,10 +7,34 @@ main {
     
 }
 
+.card-intro-message {
+    min-height: 48px;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.caps {
+    text-transform: uppercase;
+}
+
 .project img {
     max-width: 250px;
 }
 
+.list-project-logo {
+    max-width: 135px;
+}
+
+.btn {
+    max-width: fit-content;
+    margin: auto;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
 /* 
 .card-body {
     display: flex;
