@@ -9,24 +9,26 @@
     {% if user.is_authenticated %}
     
         <div class="row">
-            {% for project in projects %}
-                <div class="col-md-6 mb-4">
-                    <div class="card pt-5 pb-5 text-center">
-                        <div class="mb-5">
-                            <h3 class="mb-3">{{ project.title }}</h3>
-                            {% if project.project_logo %}
-                                <img class="list-project-logo" src="{% static 'img' %}/{{project.project_logo}}" alt="{{ project.title }}">
-                            {% endif %}
+            {% for project in user_projects %}
+        
+                    <div class="col-md-6 mb-4">
+                        <div class="card pt-5 pb-5 text-center">
+                            <div class="mb-5">
+                                <h3 class="mb-3">{{ project.title }}</h3>
+                                {% if project.project_logo %}
+                                    <img class="list-project-logo" src="{% static 'img' %}/{{project.project_logo}}" alt="{{ project.title }}">
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'project' project.id %}" class="btn btn-outline-secondary">Project Dashboard</a>
                         </div>
-                        <a href="{% url 'project' project.id %}" class="btn btn-outline-secondary">Project Dashboard</a>
                     </div>
-                </div>
+              
             {% endfor %}
         </div>
 
     {% else %}
-        <h2>Please log in to edit projects</h2>
-        <a href="{% url 'list' %}"></a>
+        <h2>Please log in to see the available projects</h2>
+        <a href="{% url 'index' %}"></a>
     {% endif %}
   
 {% endblock %}

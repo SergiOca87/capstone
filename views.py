@@ -22,7 +22,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("project_list.html"))
+            return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "index.html", {
                 "message": "Invalid username and/or password."
@@ -66,9 +66,12 @@ def register(request):
 
 
 def project_list(request):
-    projects = Project.objects.all()
+    # projects = Project.objects.all()
+    user = request.user
+    user_projects = user.projects.all()
     return render(request, "project_list.html", {
-        'projects': projects
+        'user_projects': user_projects,
+        'user': user
     })
 
 
@@ -94,7 +97,6 @@ def new_project(request):
         # Add this project, to the current user list of projects
         current_user.projects.add(f)
         
-
         for user_id in project_users_id:
             # Add the project to the selected users projects list
             user = User.objects.get(pk=user_id)
@@ -215,7 +217,7 @@ def edit_project(request, project_id):
 
         # project.save();
    
-        return HttpResponseRedirect(reverse('project_list.html'))
+        return HttpResponseRedirect(reverse('project_list'))
     else:
 
         # Need to create an edit template and pre-populate fields
