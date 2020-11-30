@@ -1,9 +1,11 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Project, Phase
 
@@ -66,7 +68,6 @@ def register(request):
 
 
 def project_list(request):
-    # projects = Project.objects.all()
     user = request.user
     user_projects = user.projects.all()
     return render(request, "project_list.html", {
@@ -77,6 +78,7 @@ def project_list(request):
 
 # Find projects where this user is assigned...
 # Add an avatar, edit name maybee?
+# Able to edit your account I guess
 def dashboard(request, project_id):
     current_user = request.user
     project = Project.objects.get(pk=project_id)
@@ -120,13 +122,14 @@ def new_project(request):
             "current_user": current_user
         })
 
+# @csrf_exempt
 def project(request, project_id):
     project = Project.objects.get(pk=project_id)
     phases = Phase.objects.filter(project=project)
     project_users = project.project_users.all()
 
     if request.method == "POST":
-        # Is this a request from the Phases form?
+        # If it has name, then it's a postmfrom the Phases form
         if 'name' in request.POST:
             name  = request.POST["name"]
             start_date = request.POST.get("start")
@@ -134,8 +137,6 @@ def project(request, project_id):
             completed = request.POST.get("completed")
             completed = True if completed == 'on' else False
             project = Project.objects.get(pk=project_id)
-
-            print(completed)
 
             f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
             f.save()
@@ -146,39 +147,42 @@ def project(request, project_id):
                 "project_users": project_users
                 # "project_users_list": project_users_list
             })
+  
+    # elif request.method == "PUT":
+    #     print('put')
+    #     data = json.loads(request.body)
+    #     return HttpResponse(status=204)
 
-        # Then the post is from the Phases toggle button
-        else:
-            # get the clicked on Phase, here, project_id is in fact, phase_id
-            # To Fix this naming
-            if( 'completed' in request.POST ):
-                phase_id = request.POST.get("phase_id")
-                phase = Phase.objects.get(pk=phase_id)
-                phase.completed = False
+        # Else, the post is from the complete or not complete toggle button
+        # THis works, but reloads the page!
+        # else:
+        #     if( 'completed' in request.POST ):
+        #         phase_id = request.POST.get("phase_id")
+        #         phase = Phase.objects.get(pk=phase_id)
+        #         phase.completed = False
+        #         phase.save()
 
-                phase.save()
-
-                return render(request, "project.html", {
-                    "project": project,
-                    "phases": phases,
-                    "project_users": project_users
-                    # "project_users_list": project_users_list
-                })
-                # "project_users_lipkst": project_users_list
+        #         return render(request, "project.html", {
+        #             "project": project,
+        #             "phases": phases,
+        #             "project_users": project_users
+        #             # "project_users_list": project_users_list
+        #         })
+        #         # "project_users_lipkst": project_users_list
         
-            else:
-                phase_id = request.POST.get("phase_id")
-                phase = Phase.objects.get(pk=phase_id)
-                phase.completed = True
+        #     else:
+        #         phase_id = request.POST.get("phase_id")
+        #         phase = Phase.objects.get(pk=phase_id)
+        #         phase.completed = True
 
-                phase.save()
+        #         phase.save()
             
-                return render(request, "project.html", {
-                    "project": project,
-                    "phases": phases,
-                    "project_users": project_users
-                    # "project_users_list": project_users_list
-                })
+        #         return render(request, "project.html", {
+        #             "project": project,
+        #             "phases": phases,
+        #             "project_users": project_users
+        #             # "project_users_list": project_users_list
+        #         })
     else:
         try:
             project = Project.objects.get(pk=project_id)
@@ -190,6 +194,20 @@ def project(request, project_id):
             "phases": phases,
             "project_users": project_users
         })
+
+
+def phase(request, phase_id):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        phase = Phase.objects.get(pk=phase_id)
+        print(data)
+        if data.get('completed') == 'True':
+            phase.completed = True
+            phase.save()
+        elif data.get('completed') == 'False':
+            phase.completed = False
+            phase.save()
+        return HttpResponse(status=204)
 
     
 # Before editing the project, logo and users must work well

@@ -39,17 +39,19 @@
 
                         <p>{{ phase.completed }}</p>
                         {% if phase.completed is False %}
-                            <form action="{% url 'project' project.id %}" method="post">
+                            <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}"">Not Completed</a>
+                            <!-- <form action="{% url 'project' project.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="phase_id" value="{{ phase.id }}">
                                 <input type="submit" name="not_completed" class="btn btn-outline-danger" value="Not Completed">
-                            </form>
+                            </form> -->
                         {% else %}
-                            <form action="{% url 'project' project.id %}" method="post">
+                            <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}"">Completed</a>
+                            <!-- <form action="{% url 'project' project.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="phase_id" value="{{ phase.id }}">
                                 <input type="submit" name="completed" class="btn btn-outline-success" value="Completed">
-                            </form>
+                            </form> -->
                         {% endif %}
                     </li>
 
