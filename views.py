@@ -130,23 +130,39 @@ def project(request, project_id):
 
     if request.method == "POST":
         # If it has name, then it's a postmfrom the Phases form
-        if 'name' in request.POST:
-            name  = request.POST["name"]
-            start_date = request.POST.get("start")
-            end_date = request.POST.get("end")
-            completed = request.POST.get("completed")
-            completed = True if completed == 'on' else False
-            project = Project.objects.get(pk=project_id)
+        # Make it a POST via fetch
+        data = json.loads(request.body)
+        name = data.get("name")
+        start_date = data.get("start")
+        end_date = data.get("end")
+        completed = data.get("completed")
+        completed = True if completed == 'on' else False
+        project = Project.objects.get(pk=project_id)
 
-            f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
-            f.save()
+        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
+        f.save()
+        return HttpResponse(status=204)
 
-            return render(request, "project.html", {
-                "project": project,
-                "phases": phases,
-                "project_users": project_users
-                # "project_users_list": project_users_list
-            })
+
+        # if 'name' in request.POST:
+        #     name  = request.POST["name"]
+        #     start_date = request.POST.get("start")
+        #     end_date = request.POST.get("end")
+        #     completed = request.POST.get("completed")
+        #     completed = True if completed == 'on' else False
+        #     project = Project.objects.get(pk=project_id)
+
+        #     f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
+        #     f.save()
+
+        #     return render(request, "project.html", {
+        #         "project": project,
+        #         "phases": phases,
+        #         "project_users": project_users
+        #         # "project_users_list": project_users_list
+        #     })
+
+        # /******************** **************************/
   
     # elif request.method == "PUT":
     #     print('put')
