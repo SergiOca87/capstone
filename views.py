@@ -127,6 +127,8 @@ def project(request, project_id):
     project = Project.objects.get(pk=project_id)
     phases = Phase.objects.filter(project=project)
     project_users = project.project_users.all()
+    all_phases = Phase.objects.all()
+    latest_phase_id = Phase.objects.last().id + 1
 
     if request.method == "POST":
         # If it has name, then it's a postmfrom the Phases form
@@ -138,9 +140,21 @@ def project(request, project_id):
         completed = data.get("completed")
         completed = True if completed == 'on' else False
         project = Project.objects.get(pk=project_id)
+       
+        # Get all of the phases
 
-        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
+        # determine the latest added phase
+
+        # create an id for the new phase we are about to save
+
+        # Then fetch that phase by id
+
+        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project, id=latest_phase_id)
         f.save()
+
+
+
+        # Now retrieve the id of this newly created Phase, needed to create the template literal
         return HttpResponse(status=204)
 
 
@@ -208,6 +222,7 @@ def project(request, project_id):
         return render(request, "project.html", {
             "project": project,
             "phases": phases,
+            "latest_phase_id": latest_phase_id,
             "project_users": project_users
         })
 
@@ -224,6 +239,22 @@ def phase(request, phase_id):
             phase.completed = False
             phase.save()
         return HttpResponse(status=204)
+
+    else:
+        phase = Phase.objects.get(pk=phase_id)
+        name = phase.name
+        start_date = phase.start_date
+        end_date = phase.end_date
+        completed = phase.completed
+        return JsonResponse(
+            {
+                'id': phase_id,
+                'name': name,
+                'start_date': start_date,
+                'end_date': end_date,
+                'completed': completed
+            }
+        )
 
     
 # Before editing the project, logo and users must work well

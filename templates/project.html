@@ -39,14 +39,14 @@
 
                         <p>{{ phase.completed }}</p>
                         {% if phase.completed is False %}
-                            <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}"">Not Completed</a>
+                            <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}">Not Completed</a>
                             <!-- <form action="{% url 'project' project.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="phase_id" value="{{ phase.id }}">
                                 <input type="submit" name="not_completed" class="btn btn-outline-danger" value="Not Completed">
                             </form> -->
                         {% else %}
-                            <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}"">Completed</a>
+                            <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
                             <!-- <form action="{% url 'project' project.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="phase_id" value="{{ phase.id }}">
@@ -60,7 +60,7 @@
         {% endif %}
        
         <h3 class="mt-4 mb-3">Add a new project phase:</h3>
-        <form class="phase_form" data-id="{{ project.id }}">
+        <form class="phase_form" data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}">
             <!-- {% csrf_token %} -->
             <div class="form-group">
                 <input class="form-control" type="text" name="name" id="name" placeholder="Phase Name">

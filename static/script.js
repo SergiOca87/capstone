@@ -1,5 +1,4 @@
-// We need to change to button without reloading now
-// Need to add a post for the Phases
+// TODO - Make the pahe toggle dynamic, the forEach only accounts for existing elements
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -15,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const start = document.querySelector('#start').value;
         const end = document.querySelector('#end').value;
         const completed = document.querySelector('#completed').value;
+        let latest_phase_id = this.dataset.latest;
 
-        // create the post method 
        fetch(`/project/${project_id}`, {
             method: 'POST',
             credentials : 'include', // For Cors
@@ -33,56 +32,79 @@ document.addEventListener('DOMContentLoaded', function() {
        })
        .then( () => {
 
-        // Create a template literal of the Phase and add instanceof, it works
-       })
-       .catch( (error) => console.log(error))
-       
+            fetch(`/phase/${latest_phase_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const phase = `
+                    <li class="list-group-item">
+                        <p>${data.name}</p>
+                        <p>Start: ${data.start_date}</p>
+                        <p>End: ${data.end_date}</p>
+                        <a class="completed_toggle btn btn-outline-danger" href="#" data-project="${project_id}" data-completed="${data.completed}" data-id="${data.id}">Not Completed</a>
+                    </li>
+                `
 
-        
+                    document.querySelector('.list-group-flush').insertAdjacentHTML('beforeend', phase);
+                    addListeners();
+                })
+       })
+       .then( () => {
+
+            // Add 1 to the data id on the form, so we can add a new phase without an id conflict
+           let latest_phase_id_int = parseInt(latest_phase_id);
+           latest_phase_id_int++
+           document.querySelector('.phase_form').setAttribute('data-latest', latest_phase_id_int.toString())
+       })
+
+       .catch( (error) => console.log(error))
     })
 
+});
 
-   
-
+function addListeners() {
     document.querySelectorAll('.completed_toggle').forEach( el => {
         el.addEventListener('click', function(e) {
             e.preventDefault();
-
-            // Get the Phase ID
-            const phase_id = el.dataset.id;
-            const completed = el.dataset.completed === 'true' ? 'False' : 'True';
-            const project_id = el.dataset.project;
-
-            fetch(`/phase/${phase_id}`, {
-                method: 'PUT',
-                credentials : 'include', // For Cors
-                credentials : 'same-origin', // For same origin requests 
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({
-                    completed: completed
-                })
-            })
-            .then( () => {
-                if( el.classList.contains('btn-outline-danger') ) {
-                    el.classList.remove('btn-outline-danger');
-                    el.classList.add('btn-outline-success');
-                    el.textContent = 'Completed';
-                    el.dataset.completed = 'true';
-                } else {
-                    el.classList.remove('btn-outline-success');
-                    el.classList.add('btn-outline-danger');
-                    el.textContent = 'Not Completed';
-                    el.dataset.completed = 'false';
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });  
-        });
+            completeToggle(el)
+        })
     });
-});
+}
+
+function completeToggle(el) {
+   
+    // Get the Phase ID
+    const phase_id = el.dataset.id;
+    const completed = el.dataset.completed === 'true' ? 'False' : 'True';
+    const project_id = el.dataset.project;
+
+    fetch(`/phase/${phase_id}`, {
+        method: 'PUT',
+        credentials : 'include', // For Cors
+        credentials : 'same-origin', // For same origin requests 
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({
+            completed: completed
+        })
+    })
+    .then( () => {
+        if( el.classList.contains('btn-outline-danger') ) {
+            el.classList.remove('btn-outline-danger');
+            el.classList.add('btn-outline-success');
+            el.textContent = 'Completed';
+            el.dataset.completed = 'true';
+        } else {
+            el.classList.remove('btn-outline-success');
+            el.classList.add('btn-outline-danger');
+            el.textContent = 'Not Completed';
+            el.dataset.completed = 'false';
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });  
+};
 
 function getCookie(name) {
     var cookieValue = null;
@@ -98,3 +120,7 @@ function getCookie(name) {
         }
     }
     return cookieValue;}
+
+
+    // TODO:
+    // Get rid of completed toggle on phase create?
