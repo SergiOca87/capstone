@@ -2,6 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    addListeners();
+
     // Get the phase Form
     document.querySelector('.phase_form').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const name = document.querySelector('#name').value;
         const start = document.querySelector('#start').value;
         const end = document.querySelector('#end').value;
-        const completed = document.querySelector('#completed').value;
+        const completed = document.querySelector('#completed').checked;
         let latest_phase_id = this.dataset.latest;
 
        fetch(`/project/${project_id}`, {
@@ -62,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addListeners() {
+    console.log('addlisteners run')
     document.querySelectorAll('.completed_toggle').forEach( el => {
         el.addEventListener('click', function(e) {
             e.preventDefault();
@@ -71,6 +74,8 @@ function addListeners() {
 }
 
 function completeToggle(el) {
+
+    console.log('complete toogle')
    
     // Get the Phase ID
     const phase_id = el.dataset.id;

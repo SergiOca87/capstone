@@ -6,7 +6,9 @@
     <div class="project">
         <div class="d-flex align-items-center justify-content-center mb-3">
             <h2 class="mr-3 mb-0">{{ project.title }}</h2>
-            <img src="{% static 'img' %}/{{project.project_logo}}" alt="{{ project.title }}">
+            {% if project.project_logo %}
+                <img src="{% static 'img' %}/{{project.project_logo}}" alt="{{ project.title }}">
+            {% endif %}
         </div>
         
         <!-- Only show if admin -->
@@ -25,40 +27,33 @@
             {% endfor %}
         </ul>
 
-        {% if phases %}
             <div class="mt-4 mb-4">
                 <hr>
             </div>
+            
+        {% if phases %}
             <p>Project Phases:</p>
+        {% endif %}
             <ul class="list-group list-group-flush">
                 {% for phase in phases %}
                     <li class="list-group-item">
-                        <p>{{ phase.name }}</p>
-                        <p>Start: {{ phase.start_date }}</p>
-                        <p>End: {{ phase.end_date }}</p>
+                        <h3>{{ phase.name }}</h3>
+                        <p><span>Start</span>: {{ phase.start_date }}</p>
+                        <p><span>End</span>: {{ phase.end_date }}</p>
 
-                        <p>{{ phase.completed }}</p>
-                        {% if phase.completed is False %}
-                            <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}">Not Completed</a>
-                            <!-- <form action="{% url 'project' project.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="phase_id" value="{{ phase.id }}">
-                                <input type="submit" name="not_completed" class="btn btn-outline-danger" value="Not Completed">
-                            </form> -->
-                        {% else %}
-                            <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
-                            <!-- <form action="{% url 'project' project.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="phase_id" value="{{ phase.id }}">
-                                <input type="submit" name="completed" class="btn btn-outline-success" value="Completed">
-                            </form> -->
-                        {% endif %}
+                        <div class="d-flex justify-content-between">
+                            {% if phase.completed is False %}
+                                <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}">Not Completed</a>
+                            {% else %}
+                                <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
+                            {% endif %}
+                            <a class="btn btn-outline-secondary" href="{% url 'edit_phase' phase.id %}">Edit Phase</a>
+                        </div>
                     </li>
 
                 {% endfor %}
             </ul>
-        {% endif %}
-       
+     
         <h3 class="mt-4 mb-3">Add a new project phase:</h3>
         <form class="phase_form" data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}">
             <!-- {% csrf_token %} -->

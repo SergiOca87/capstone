@@ -138,8 +138,10 @@ def project(request, project_id):
         start_date = data.get("start")
         end_date = data.get("end")
         completed = data.get("completed")
-        completed = True if completed == 'on' else False
+        completed = True if completed == 'true' else False
         project = Project.objects.get(pk=project_id)
+
+        print(data)
        
         # Get all of the phases
 
@@ -158,61 +160,6 @@ def project(request, project_id):
         return HttpResponse(status=204)
 
 
-        # if 'name' in request.POST:
-        #     name  = request.POST["name"]
-        #     start_date = request.POST.get("start")
-        #     end_date = request.POST.get("end")
-        #     completed = request.POST.get("completed")
-        #     completed = True if completed == 'on' else False
-        #     project = Project.objects.get(pk=project_id)
-
-        #     f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project)
-        #     f.save()
-
-        #     return render(request, "project.html", {
-        #         "project": project,
-        #         "phases": phases,
-        #         "project_users": project_users
-        #         # "project_users_list": project_users_list
-        #     })
-
-        # /******************** **************************/
-  
-    # elif request.method == "PUT":
-    #     print('put')
-    #     data = json.loads(request.body)
-    #     return HttpResponse(status=204)
-
-        # Else, the post is from the complete or not complete toggle button
-        # THis works, but reloads the page!
-        # else:
-        #     if( 'completed' in request.POST ):
-        #         phase_id = request.POST.get("phase_id")
-        #         phase = Phase.objects.get(pk=phase_id)
-        #         phase.completed = False
-        #         phase.save()
-
-        #         return render(request, "project.html", {
-        #             "project": project,
-        #             "phases": phases,
-        #             "project_users": project_users
-        #             # "project_users_list": project_users_list
-        #         })
-        #         # "project_users_lipkst": project_users_list
-        
-        #     else:
-        #         phase_id = request.POST.get("phase_id")
-        #         phase = Phase.objects.get(pk=phase_id)
-        #         phase.completed = True
-
-        #         phase.save()
-            
-        #         return render(request, "project.html", {
-        #             "project": project,
-        #             "phases": phases,
-        #             "project_users": project_users
-        #             # "project_users_list": project_users_list
-        #         })
     else:
         try:
             project = Project.objects.get(pk=project_id)
@@ -226,6 +173,9 @@ def project(request, project_id):
             "project_users": project_users
         })
 
+
+def edit_project(request, project_id):
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def phase(request, phase_id):
     if request.method == "PUT":
@@ -256,43 +206,34 @@ def phase(request, phase_id):
             }
         )
 
-    
-# Before editing the project, logo and users must work well
-def edit_project(request, project_id):
+def edit_phase(request, phase_id):
+    phase = Phase.objects.get(pk=phase_id)
+
     if request.method == "POST":
-        # project = Project.objects.get(pk=project_id)
-
-        # title = request.POST["title"]
-        # current_user = request.user
-        # project_users_id = request.POST.getlist('users')
-        # project_users_list = []
-        # project_logo = request.POST["project_logo"]
-        # # Change logo when it works as well
-
-        # project.title = title
-
-        # ?
-        # # project.project_users 
-
-        # title = request.POST["title"]
-       
-
-        # project.title = request.POST["title"]
-        # project.notifications = request.POST["notifications"]
-
-        # project.save();
    
-        return HttpResponseRedirect(reverse('project_list'))
+        phase_name = request.post['name']
+        start_date = request.post['start_date']
+        end_date = request.post['end_date']
+
+        phase.save()
+        # Returns to the previous page
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
 
         # Need to create an edit template and pre-populate fields
-        project = Project.objects.get(pk=project_id)
-        return render(request, "dashboard.html", {
-            "project": project
+        phase = Phase.objects.get(pk=phase_id)
+        return render(request, "edit_phase.html", {
+            "phase": phase
         })
+    
+def delete_phase(request, phase_id):
+    phase = Phase.objects.get(pk=phase_id)
+    phase.delete()
+    # Returns to the previous page
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-# Projects really need a list of users assigned to that project to work well
-# Make restrictions (edit button, show all projects...Maybe a user level)
-# Able to mark a phase as completed
-# Email notifications? That would be an extra
-# project.html needs a list of users with access to that project, so let's use "project_users"
+
+# Use decorators to restrict users on certain routes
+# Add values to the dates on phase edit
+# add projet edit
+# add user dashboard?
