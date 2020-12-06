@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    {% load static %}
+{% load static %}
 
     <div class="project">
         <div class="d-flex align-items-center justify-content-center mb-3">
@@ -23,7 +23,10 @@
         <p>Project Users:</p>
         <ul class="list-group list-group-horizontal">
         {% for user in project_users %}
-                <li class="list-group-item">{{ user}}</li>
+                <li class="list-group-item user-wrap d-flex align-items-center">
+                    <span>{{ user.username }}</span>
+                    <img class="user-avatar ml-2" src="https://eu.ui-avatars.com/api/?name={{ user.username }}?background={{ user.user_color }}" alt="{{ user.username }}">
+                </li>
             {% endfor %}
         </ul>
 
@@ -40,38 +43,35 @@
                         <h3>{{ phase.name }}</h3>
                         <p><span>Start</span>: {{ phase.start_date }}</p>
                         <p><span>End</span>: {{ phase.end_date }}</p>
-
-                        <div class="d-flex justify-content-between">
-                            {% if phase.completed is False %}
-                                <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}">Not Completed</a>
-                            {% else %}
-                                <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
-                            {% endif %}
-                            <a class="btn btn-outline-secondary" href="{% url 'edit_phase' phase.id %}">Edit Phase</a>
-                        </div>
+                        {% if phase.completed is False %}
+                            <a class="completed_toggle btn btn-outline-danger" href="#" data-project="{{ project.id }}" data-completed="false" data-id="{{ phase.id }}">Not Completed</a>
+                        {% else %}
+                            <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
+                        {% endif %}
+                        <a class="btn btn-outline-secondary" href="{% url 'edit_phase' phase.id %}">Edit Phase</a>                
                     </li>
-
                 {% endfor %}
             </ul>
      
         <h3 class="mt-4 mb-3">Add a new project phase:</h3>
-        <form class="phase_form" data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}">
+        <form class="phase-form" data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}">
             <!-- {% csrf_token %} -->
             <div class="form-group">
+                <label for="name">Phase Name</label>
                 <input class="form-control" type="text" name="name" id="name" placeholder="Phase Name">
             </div>
             <div class="form-group">
-                <label for="notifications">Start Date</label>
+                <label for="start">Start Date</label>
                 <input type="date" name="start" id="start">
             </div>
             <div class="form-group">
-                <label for="notifications">End Date</label>
+                <label for="end">End Date</label>
                 <input type="date" name="end" id="end">
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="completed">Completed?</label>
                 <input type="checkbox" name="completed" id="completed">
-            </div>
+            </div> -->
             <input class="btn btn-primary" type="submit" name="add_phase" value="Add Phase">
         </form>
     </div>

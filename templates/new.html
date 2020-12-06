@@ -24,9 +24,9 @@
             <div class="form-group">
                 <label for="users">Related Users (users with access to this project).</label>
                 <select name="users" id="users" multiple>
-                    <option value="{{current_user.id}}" selected>{{ current_user.username }}</option>
-                    <!-- can I delete the admin from this list? -->
-                    {% for user in users %}
+                    <!-- <option value="{{current_user.id}}" selected>{{ current_user.username }}</option> -->
+                    <!-- can I delete the current user from this list? -->
+                    {% for user in users if user is not current_user %}
                         <option value="{{user.id}}">{{ user.username }}</option>
                     {% endfor %}
                 </select>

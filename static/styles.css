@@ -1,5 +1,5 @@
 main {
-  padding: 2rem 0;
+  padding: 10vh 0;
 }
 
 .card {
@@ -37,6 +37,13 @@ body {
 
 .list-group.list-group-flush .list-group-item {
   padding: 1.75rem 1.25rem;
+  margin-bottom: 2rem;
+  border-bottom: 0;
+  transition: box-shadow 500ms;
+}
+
+.list-group.list-group-flush .list-group-item:hover {
+  box-shadow: 0 2px 7px -3px rgba(0, 0, 0, 0.3);
 }
 
 .list-group-item h3 {
@@ -54,11 +61,21 @@ body {
   margin-top: 15px;
 }
 
-.list-group-item span {
+.list-group-item span,
+.phase-form label {
   font-weight: 500;
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 0.5px;
+}
+
+.phase-form {
+  max-width: 450px;
+}
+
+.user-avatar {
+  max-height: 40px;
+  border-radius: 50%;
 }
 /* 
 .card-body {

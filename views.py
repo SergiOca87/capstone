@@ -41,7 +41,7 @@ def logout_view(request):
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
-        email = request.POST["email"]
+        user_color = request.POST["user_color"]
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -53,7 +53,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, user_color, password)
             user.save()
         except IntegrityError:
             return render(request, "register.html", {
@@ -65,6 +65,26 @@ def register(request):
         })
     else:
         return render(request, "register.html")
+
+def edit_profile(request, user_id):
+    user = request.user
+    if request.method == "POST":
+        user.username = request.POST["username"]
+        user.user_color = request.POST["user_color"]
+    
+        # Attempt to change user fields
+        try:
+            user.save()
+        except IntegrityError:
+            return render(request, "edit_profile.html", {
+                "message": "Username already taken."
+            })
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    else:
+        return render(request, "edit_profile.html", {
+            "user": user
+        })
 
 
 def project_list(request):
@@ -137,8 +157,8 @@ def project(request, project_id):
         name = data.get("name")
         start_date = data.get("start")
         end_date = data.get("end")
-        completed = data.get("completed")
-        completed = True if completed == 'true' else False
+        # completed = data.get("completed")
+        # completed = True if completed == 'true' else False
         project = Project.objects.get(pk=project_id)
 
         print(data)
@@ -151,10 +171,8 @@ def project(request, project_id):
 
         # Then fetch that phase by id
 
-        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = completed, project = project, id=latest_phase_id)
+        f = Phase( name = name, start_date = start_date, end_date = end_date, completed = False, project = project, id=latest_phase_id)
         f.save()
-
-
 
         # Now retrieve the id of this newly created Phase, needed to create the template literal
         return HttpResponse(status=204)
@@ -181,7 +199,6 @@ def phase(request, phase_id):
     if request.method == "PUT":
         data = json.loads(request.body)
         phase = Phase.objects.get(pk=phase_id)
-        print(data)
         if data.get('completed') == 'True':
             phase.completed = True
             phase.save()
@@ -210,7 +227,6 @@ def edit_phase(request, phase_id):
     phase = Phase.objects.get(pk=phase_id)
 
     if request.method == "POST":
-   
         phase_name = request.post['name']
         start_date = request.post['start_date']
         end_date = request.post['end_date']
