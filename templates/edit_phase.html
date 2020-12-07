@@ -2,28 +2,29 @@
 
 {% block body %}
 
-    <h3 class="mt-4 mb-3">Edit Phase:</h3>
-    <form class="phase-form" method="POST" action="{% url 'edit_phase' phase.id %}">
-        <!-- {% csrf_token %} -->
-        <div class="form-group">
-            <label for="name">Phase Name</label>
-            <input class="form-control" type="text" name="name" id="name" value="{{ phase.name }}" placeholder="Phase Name">
-        </div>
-        <div class="form-group">
-            <label for="start">Start Date</label>
-            <input type="date" name="start" id="start" value="{{ phase.start_date }}" placeholder="{{ phase.start_date }}">
-        </div>
-        <div class="form-group">
-            <label for="end">End Date</label>
-            <input type="date" name="end" id="end" value="{{ phase.end_date }}" placeholder="{{ phase.end_date }}">
-        </div>
-        <!-- <div class="form-group">
-            <label for="completed">Completed?</label>
-            <input type="checkbox" name="completed" id="completed" value="{{ phase.completed }}">
-        </div> -->
-        <input type="submit" class="btn btn-outline-success" value="Save Changes">
-        <a href="{% url 'delete_phase' phase.id %}" class="btn btn-outline-danger">Delete Phase</a>
-        
-    </form>
+    <div class="form-wrap">
+        <h3 class="mt-4 mb-3">Edit Phase</h3>
+        <form method="POST" action="{% url 'edit_phase' phase.id %}">
+            <!-- {% csrf_token %} -->
+            <div class="form-group">
+                <label for="name">Phase Name</label>
+                <input class="form-control" type="text" name="name" id="name" value="{{ phase.name }}" placeholder="Phase Name">
+            </div>
+            <div class="form-group">
+                <label for="start">Start Date</label>
+                <input type="date" name="start" id="start" value="{{ phase.start_date }}" placeholder="{{ phase.start_date }}">
+            </div>
+            <div class="form-group">
+                <label for="end">End Date</label>
+                <input type="date" name="end" id="end" value="{{ phase.end_date }}" placeholder="{{ phase.end_date }}">
+            </div>
+            <!-- <div class="form-group">
+                <label for="completed">Completed?</label>
+                <input type="checkbox" name="completed" id="completed" value="{{ phase.completed }}">
+            </div> -->
+            <input type="submit" class="btn btn-outline-success" value="Save Changes">
+            <a href="{% url 'delete_phase' phase.id %}" class="btn btn-outline-danger">Delete Phase</a>
+        </form>
+    </div>
 
 {% endblock %}

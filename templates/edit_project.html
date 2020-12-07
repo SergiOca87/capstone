@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="form-wrap">
+        <h3 class="mt-4 mb-3">Edit Project</h3>
+        <form action="{% url 'new_project' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" name="title" value="{{ project.title }}" placeholder="Project Title">
+            </div>
+            <div class="form-group">
+                <label for="project_logo" class="d-block">Project Logo</label>
+                <input type="file" name="project_logo" id="project_logo" value="{{ project.project_logo }}">
+            </div>
+            <div class="form-group">
+                <label for="users">Related Users (users with access to this project).</label>
+                <select name="users" id="users" class="form-control" multiple>
+                    {% for user in users %}
+                        <option value="{{user.id}}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Add Project">
+        </form>
+    </div>
+
+{% endblock %}

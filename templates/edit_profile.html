@@ -1,18 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h3 class="mt-4 mb-3">Edit Profile:</h3>
-    <form action="{% url 'edit_profile' user.id %}" method="post" class="phase-form">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="username">Edit Username</label>
-            <input class="form-control" autofocus type="text" name="username" value="{{ user.username }}" placeholder="{{ user.username }}">
-        </div>
-        <div class="form-group">
-            <label for="user_color">Edit Color</label>
-            <input type="color" name="user_color" id="user_color" value="{{ user.user_color }}">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Save Changes">
-    </form>
+    <div class="form-wrap">
+        <h3 class="mt-4 mb-3">Edit Profile</h3>
+        <form action="{% url 'edit_profile' user.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Edit Username</label>
+                <input class="form-control" autofocus type="text" name="username" value="{{ user.username }}" placeholder="{{ user.username }}">
+            </div>
+            <div class="form-group">
+                <label for="user_color">Edit Color</label>
+                <input type="color" name="user_color" id="user_color" value="{{ user.user_color }}">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Save Changes">
+        </form>
+    </div>
 
 {% endblock %}

@@ -71,6 +71,8 @@ def edit_profile(request, user_id):
     if request.method == "POST":
         user.username = request.POST["username"]
         user.user_color = request.POST["user_color"]
+
+        print(user.user_color)
     
         # Attempt to change user fields
         try:
@@ -161,16 +163,6 @@ def project(request, project_id):
         # completed = True if completed == 'true' else False
         project = Project.objects.get(pk=project_id)
 
-        print(data)
-       
-        # Get all of the phases
-
-        # determine the latest added phase
-
-        # create an id for the new phase we are about to save
-
-        # Then fetch that phase by id
-
         f = Phase( name = name, start_date = start_date, end_date = end_date, completed = False, project = project, id=latest_phase_id)
         f.save()
 
@@ -193,7 +185,20 @@ def project(request, project_id):
 
 
 def edit_project(request, project_id):
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    project = Project.objects.get(pk=project_id)
+    users = User.objects.all()
+    if request.method == "POST":
+        title = request.POST["title"]
+        project.project_logo = request.POST["project_logo"]
+
+        project.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return render(request, "edit_project.html", {
+            "project": project,
+            "users": users
+        })
+
 
 def phase(request, phase_id):
     if request.method == "PUT":
@@ -235,21 +240,20 @@ def edit_phase(request, phase_id):
         # Returns to the previous page
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-
-        # Need to create an edit template and pre-populate fields
-        phase = Phase.objects.get(pk=phase_id)
         return render(request, "edit_phase.html", {
             "phase": phase
         })
-    
+
+
 def delete_phase(request, phase_id):
     phase = Phase.objects.get(pk=phase_id)
+    # project = Project.objects.filter(project=phase.id)
+
+    # Need to polish this redirect, how do I go back to the project?
+
     phase.delete()
     # Returns to the previous page
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, "index.html")
 
 
-# Use decorators to restrict users on certain routes
-# Add values to the dates on phase edit
-# add projet edit
-# add user dashboard?
+# Need to polish this redirect, how do I go back to the project after delete

@@ -6,7 +6,7 @@
         {% if user.is_authenticated %}
         <div class="user-wrap d-flex">
             <h2 class="mb-5 ">Welcome {{user.username}}</h2>
-            <img class="user-avatar ml-2" src="https://eu.ui-avatars.com/api/?name={{ user.username }}?background={{ user.user_color }}" alt="{{ user.username }}">
+            <img class="user-avatar ml-2" src="https://eu.ui-avatars.com/api/?name={{ user.username }}&background={{ user.user_color|slice:'1:' }}" alt="{{ user.username }}">
         </div>
             <div class="row">
                 <div class="col-md-4">
