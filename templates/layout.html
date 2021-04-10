@@ -10,33 +10,15 @@
         <link href="{% static 'styles.css' %}" rel="stylesheet">
     </head>
     <body class="bg-light">
-
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-          
-            
               <div class="navbar-nav d-flex justify-content-between w-100">
+                <a href="/" class="navbar-brand">Project Phases</a>
                 {% if user.is_authenticated %}
-
-                    <!-- User Dashboard goes here -->
-                   <a href="/" class="navbar-brand">Project Phases</a>
-                   <div class="d-flex">
-                   
+                   <div class="d-flex">           
                         <a class="nav-link" href="{% url 'project_list' %}">All Projects</a>
-                    
-                  
                         <a class="nav-link" href="{% url 'new_project' %}">+ New Project</a>
-            
-                  
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-             
                     </div>   
-                {% else %}
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li> -->
                 {% endif %}
               </div>
             

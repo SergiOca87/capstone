@@ -48,14 +48,14 @@
                         {% else %}
                             <a class="completed_toggle btn btn-outline-success" href="#" data-project="{{ project.id }}" data-completed="true" data-id="{{ phase.id }}">Completed</a>
                         {% endif %}
-                        <a class="btn btn-outline-secondary" href="{% url 'edit_phase' phase.id %}">Edit Phase</a>                
+                        <a class="btn btn-outline-secondary" href="{% url 'edit_phase' phase.id project.id %}">Edit Phase</a>                
                     </li>
                 {% endfor %}
             </ul>
             
         <div class="form-wrap">
             <h3 class="mt-4 mb-3">Add a new project phase</h3>
-            <form data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}">
+            <form data-id="{{ project.id }}" data-latest="{{ latest_phase_id }}" class="phase-form">
                 <!-- {% csrf_token %} -->
                 <div class="form-group">
                     <label for="name">Phase Name</label>

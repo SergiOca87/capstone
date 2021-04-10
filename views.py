@@ -2,17 +2,20 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from .models import User, Project, Phase
 
 def index(request):
-    return render(request, "index.html")
+    projects = Project.objects.all()
+    return render(request, "index.html", {
+        "projects": projects
+    })
 
-
+@csrf_protect
 def login_view(request):
     if request.method == "POST":
 
@@ -81,7 +84,7 @@ def edit_profile(request, user_id):
             return render(request, "edit_profile.html", {
                 "message": "Username already taken."
             })
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return redirect('index')
 
     else:
         return render(request, "edit_profile.html", {
@@ -97,14 +100,6 @@ def project_list(request):
         'user': user
     })
 
-
-# Find projects where this user is assigned...
-# Add an avatar, edit name maybee?
-# Able to edit your account I guess
-def dashboard(request, project_id):
-    current_user = request.user
-    project = Project.objects.get(pk=project_id)
-    
 
 def new_project(request):
     users = User.objects.all()
@@ -150,7 +145,12 @@ def project(request, project_id):
     phases = Phase.objects.filter(project=project)
     project_users = project.project_users.all()
     all_phases = Phase.objects.all()
-    latest_phase_id = Phase.objects.last().id + 1
+
+    if( all_phases ):
+        latest_phase_id = Phase.objects.last().id + 1
+    else:
+        latest_phase_id = 1
+
 
     if request.method == "POST":
         # If it has name, then it's a postmfrom the Phases form
@@ -228,32 +228,32 @@ def phase(request, phase_id):
             }
         )
 
-def edit_phase(request, phase_id):
+def edit_phase(request, phase_id, project_id):
     phase = Phase.objects.get(pk=phase_id)
+    project = Project.objects.get(pk=project_id)
 
     if request.method == "POST":
-        phase_name = request.post['name']
-        start_date = request.post['start_date']
-        end_date = request.post['end_date']
+        phase.name = request.POST['name']
+        phase.start_date = request.POST['start']
+        phase.end_date = request.POST['end']
 
         phase.save()
         # Returns to the previous page
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return redirect('project', project_id=project_id)
     else:
         return render(request, "edit_phase.html", {
-            "phase": phase
+            "phase": phase,
+            "project": project
         })
 
 
-def delete_phase(request, phase_id):
+def delete_phase(request, phase_id, project_id):
     phase = Phase.objects.get(pk=phase_id)
-    # project = Project.objects.filter(project=phase.id)
+    project = Project.objects.get(pk=project_id)
 
     # Need to polish this redirect, how do I go back to the project?
 
     phase.delete()
     # Returns to the previous page
-    return render(request, "index.html")
-
-
+    return redirect('project', project_id=project_id)
 # Need to polish this redirect, how do I go back to the project after delete
