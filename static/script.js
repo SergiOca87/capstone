@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function addListeners() {
-	console.log('addlisteners run');
 	document.querySelectorAll('.completed_toggle').forEach((el) => {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
